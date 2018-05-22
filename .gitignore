@@ -1,0 +1,9 @@
+node_modules/
+npm-debug.log
+.DS_Store
+typings
+public
+recoil
+*.d.ts
+*.log
+*.tgz

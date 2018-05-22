@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1800 801" style="enable-background:new 0 0 1800 801;" xml:space="preserve">
+<style type="text/css">
+	.st0{opacity:0.8;fill:url(#SVGID_1_);enable-background:new    ;}
+</style>
+<title>blueArtboard 1</title>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="900.975" y1="-1.2504" x2="898.9813" y2="795.212" gradientTransform="matrix(1 0 0 -1 0 802)">
+	<stop  offset="0.1262" style="stop-color:#ACDB1D;stop-opacity:0"/>
+	<stop  offset="0.3173" style="stop-color:#ACDB1D;stop-opacity:0"/>
+	<stop  offset="0.6359" style="stop-color:#ACDB1D;stop-opacity:0.2"/>
+	<stop  offset="0.81" style="stop-color:#ACDB1D;stop-opacity:0.5"/>
+	<stop  offset="1" style="stop-color:#ACDB1D"/>
+</linearGradient>
+<path class="st0" d="M1800,801V26.5C1234.4-103.9,626.8,403.2,0,378.1V801H1800z"/>
+</svg>

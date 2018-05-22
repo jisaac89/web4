@@ -1,0 +1,12 @@
+node_modules/
+typings
+recoil
+public
+.vscode
+*.log
+*.tgz
+.babelrc
+.eslintrc
+.gitignore
+.jshintrc
+.npmignore

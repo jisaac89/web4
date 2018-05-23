@@ -5,18 +5,11 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CompressionPlugin = require('compression-webpack-plugin');
-const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const glob = require("glob-all");
+const PurifyCSSPlugin = require("purifycss-webpack");
 const buildPath = path.join(__dirname, 'public');
-
-function recursiveIssuer(m) {
-  if (m.issuer) {
-    return recursiveIssuer(m.issuer);
-  } else if (m.name) {
-    return m.name;
-  } else {
-    return false;
-  }
-}
+const devMode = process.env.NODE_ENV !== 'production';
+const staticSourcePath = path.join(__dirname, 'public');
 
 module.exports = {
   mode: "development",
@@ -48,13 +41,15 @@ module.exports = {
         exclude: '/recoil/docs/**/*'
       },
       {
-        test: /\.less$/,
+        test: /\.(css?.+|less?.+)$/,
         use: [
           MiniCssExtractPlugin.loader,
+          // { loader: "style-loader" },
           "css-loader",
-          'less-loader'
+          'less-loader',
         ]
       },
+
       {
         test: /\.json$/,
         loader: 'json-loader'
@@ -71,11 +66,32 @@ module.exports = {
             options: { minimize: true }
           }
         ]
+      },
+      {
+        test: /\.(eot?.+|svg?.+|ttf?.+|otf?.+|woff?.+|woff2?.+)$/,
+        use: 'file-loader?name=assets/[name]-[hash].[ext]'
+      },
+      {
+        test: /\.(png|gif|jpg|svg)$/,
+        use: [
+          'url-loader?limit=20480&name=assets/[name]-[hash].[ext]'
+        ],
+        include: staticSourcePath
       }
     ]
   },
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
+    }),
+    new OptimizeCSSAssetsPlugin({
+      cssProcessor: require('cssnano'),
+      cssProcessorOptions: { discardComments: { removeAll: true } },
+      canPrint: true
+    }),
+
     new HtmlWebPackPlugin({
       template: "./src/template.html",
       filename: "./index.html",
@@ -95,14 +111,27 @@ module.exports = {
       minRatio: 0.8
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    }),
-    new PreloadWebpackPlugin({
-      rel: 'preload',
-      as: 'script',
-      fileBlacklist: [/\.(css|map)$/, /base?.+/]
+    new PurifyCSSPlugin({
+      paths: glob.sync([
+        path.join(__dirname, "recoil/**/*.cshtml"),
+        path.join(__dirname, "recoil/**/*.html"),
+        path.join(__dirname, "recoil/**/*.tsx"),
+        path.join(__dirname, "recoil/**/*.ts"),
+
+        path.join(__dirname, "src/**/*.cshtml"),
+        path.join(__dirname, "src/**/*.html"),
+        path.join(__dirname, "src/**/*.tsx"),
+        path.join(__dirname, "src/**/*.ts"),
+
+        path.join(__dirname, "public/**/*.html"),
+        path.join(__dirname, "public/**/*.js"),
+      ]),
+      styleExtensions: ['.css', '.less'],
+      purifyOptions: {
+        minify: true,
+        info: true,
+        rejected: true
+      }
     }),
   ],
   optimization: {
@@ -113,18 +142,14 @@ module.exports = {
           name: "vendors",
           chunks: "all"
         },
-        appStyles: {
-          name: 'app',
-          test: (m, c, entry = 'app') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+        styles: {
+          name: 'styles',
+          test: /\.(css?.+|less?.+)$/,
           chunks: 'all',
-          enforce: true
+          minChunks: 1,
+          reuseExistingChunk: true,
+          enforce: true,
         },
-        recoilStyles: {
-          name: 'recoil',
-          test: (m, c, entry = 'recoil') => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-          chunks: 'all',
-          enforce: true
-        }
       }
     },
     minimizer: [
@@ -143,17 +168,16 @@ module.exports = {
           evaluate: true,
           if_return: true,
           join_vars: true,
+          compress: {
+            drop_console: true,
+            warnings: false, // Suppress uglification warnings
+            pure_getters: true
+          },
           output: {
             comments: false
-          },
+          }
         },
         sourceMap: true
-      }),
-      new OptimizeCSSAssetsPlugin({
-        assetNameRegExp: /\.optimize\.css$/g,
-        cssProcessor: require('cssnano'),
-        cssProcessorOptions: { discardComments: { removeAll: true } },
-        canPrint: true
       })
     ]
   }

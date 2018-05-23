@@ -8,8 +8,8 @@
     "prepublishOnly": "rimraf ./public && tsc --declaration",
     "build:pro": "rimraf ./public && webpack --mode production",
     "build:dev": "rimraf ./public && webpack --mode development",
-    "start": "webpack-dev-server --mode development --open chrome",
-    "start:node": "node server.js"
+    "start:dev": "webpack-dev-server --mode development --open chrome -hot",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -33,6 +33,7 @@
   "devDependencies": {
     "@types/node": "^10.1.2",
     "awesome-typescript-loader": "^5.0.0",
+    "chunk-manifest-webpack-plugin": "^1.1.2",
     "classnames": "^2.2.5",
     "compression-webpack-plugin": "^1.1.11",
     "css-loader": "^0.28.11",

@@ -102,14 +102,6 @@ module.exports = {
         removeRedundantAttributes: true
       }
     }),
-    new CompressionPlugin({
-      asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
-      threshold: 10240,
-      minRatio: 0.8
-    }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new PurifyCSSPlugin({
       paths: glob.sync([
         path.join(__dirname, "recoil/**/*.cshtml"),
@@ -132,6 +124,14 @@ module.exports = {
         rejected: true
       }
     }),
+    new CompressionPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
   ],
   optimization: {
     splitChunks: {

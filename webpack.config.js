@@ -91,7 +91,6 @@ module.exports = {
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
     }),
-
     new HtmlWebPackPlugin({
       template: "./src/template.html",
       filename: "./index.html",

@@ -10,6 +10,9 @@ const PurifyCSSPlugin = require("purifycss-webpack");
 const buildPath = path.join(__dirname, 'public');
 const devMode = process.env.NODE_ENV !== 'production';
 const staticSourcePath = path.join(__dirname, 'public');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+var OfflinePlugin = require('offline-plugin');
+
 
 module.exports = {
   mode: "development",
@@ -102,6 +105,17 @@ module.exports = {
         removeRedundantAttributes: true
       }
     }),
+    new HtmlWebPackPlugin({
+      template: "./src/template.html",
+      filename: "./index.html",
+      path: buildPath,
+      minify: {
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true
+      }
+    }),
     new PurifyCSSPlugin({
       paths: glob.sync([
         path.join(__dirname, "recoil/**/*.cshtml"),
@@ -132,6 +146,17 @@ module.exports = {
       minRatio: 0.8
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
+    new CopyWebpackPlugin([
+      { from: 'static/**/*' }
+    ]),
+    new OfflinePlugin({
+      appShell: '/',
+      publicPath: '/',
+      AppCache: {
+        FALLBACK: { '/': '/offline-page.html' }
+      }
+    },
+    )
   ],
   optimization: {
     splitChunks: {

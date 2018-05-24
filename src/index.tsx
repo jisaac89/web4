@@ -5,6 +5,9 @@ import * as ReactDOM from "react-dom";
 import { Provider } from 'mobx-react';
 import Entry from './components/Entry';
 
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+OfflinePluginRuntime.install();
+
 import {
     appStore,
     routerStore,

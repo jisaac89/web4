@@ -5,9 +5,11 @@
   "scripts": {
     "clean": "rimraf ./.build && rimraf ./.next && rimraf ./recoil && npm prune && npm install",
     "preinstall": "rimraf ./recoil && git clone https://www.github.com/jisaac89/recoil.git",
+    "postinstall": "rimraf ./recoil/docs",
     "prepublishOnly": "rimraf ./public && tsc --declaration",
-    "build:pro": "rimraf ./public && webpack --mode production",
-    "build:dev": "rimraf ./public && webpack --mode development",
+    "build:pro": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "build:pg": "webpack --config webpack.pg.js --mode production",
     "start:dev": "webpack-dev-server --mode development --open chrome --hot",
     "start": "node server.js"
   },
@@ -16,6 +18,7 @@
   "dependencies": {
     "@types/react": "^16.3.14",
     "animate.css": "^3.6.1",
+    "core-js": "^2.5.7",
     "express-static-gzip": "^0.3.2",
     "glob": "^7.1.2",
     "intersection-observer": "^0.5.0",
@@ -25,8 +28,8 @@
     "normalize.css": "^8.0.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-fastclick": "^3.0.2",
     "react-intersection-observer": "^5.0.3",
-    "react-mailchimp-subscribe": "^2.0.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "superagent": "^3.8.3",
